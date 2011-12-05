@@ -43,9 +43,10 @@ public class GeoStripper {
 	
 	        IImageMetadata metadata = Sanselan.getMetadata(file);
 	        JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
+	        boolean foundGPSTags=false;
+	        //make sure that image has any EXIF metadata whatsoever
 	        if (null != jpegMetadata)
 	        {
-                // note that exif might be null if no Exif metadata is found.
                 TiffImageMetadata exif = jpegMetadata.getExif();
 
                 if (null != exif)
@@ -53,18 +54,19 @@ public class GeoStripper {
                  
                 	outputSet = exif.getOutputSet();
                 }
+                
+                //Check if GPS Tags are present 
+    	        for(int i=0;i< GPSTagConstants.ALL_GPS_TAGS.length;i++)
+                {
+    	        	TiffField field = jpegMetadata.findEXIFValue(GPSTagConstants.ALL_GPS_TAGS[i]);
+                	if(field!=null)
+                	{
+                		foundGPSTags=true;
+                		break;
+                	}
+                }
             }
-	        //Check if GPS Tags are present
-	        boolean foundGPSTags=false;
-	        for(int i=0;i< GPSTagConstants.ALL_GPS_TAGS.length;i++)
-            {
-	        	TiffField field = jpegMetadata.findEXIFValue(GPSTagConstants.ALL_GPS_TAGS[i]);
-            	if(field!=null)
-            	{
-            		foundGPSTags=true;
-            		break;
-            	}
-            }
+	       
 	        //if exif data is not present or gps tags are not present, just return the same file
             if (null == outputSet || foundGPSTags == false)
             {
