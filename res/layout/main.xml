@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -20,20 +21,36 @@
         android:text="Default Gallery/Image Chooser:"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <TextView
-        android:id="@+id/chooserText"
+    <LinearLayout
+        android:id="@+id/galleryLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
-        android:layout_margin="10dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:gravity="center_vertical|center_horizontal"
+        
+        android:orientation="horizontal"  >
 
-    <Button
-        android:id="@+id/chooserButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="@string/pickGalleryButton" />
+        <ImageView
+            android:id="@+id/galleryIcon"
+            android:layout_width="72px"
+            android:layout_height="72px"
+            android:layout_gravity="left" />
+
+        <TextView
+            android:id="@+id/galleryName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5sp"
+            android:layout_weight="1"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <ImageView
+            android:id="@+id/arrowIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            
+            android:src="@drawable/arrow_right_white" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/launcherButton"
