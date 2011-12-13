@@ -1,4 +1,4 @@
-package com.geostripper;
+package com.geostripper.ui;
 
 
 import java.io.File;
@@ -10,7 +10,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,7 +18,6 @@ import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -38,6 +36,10 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.geostripper.R;
+import com.geostripper.util.GeoStripper;
+
+
 public class GeoStripperActivity extends Activity {
 	public static final String TAG = "GeoStripperActivity";
 	public static final String PREFS_NAME = "GeoStripperPreferences";
@@ -55,6 +57,9 @@ public class GeoStripperActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
+		
+		Intent i = new Intent(getApplicationContext(), WelcomeActivity.class);
+		startActivityForResult(i,100);
 		//Store application context in a static variable
 		GeoStripper.APP_CONTEXT = getApplicationContext();
 

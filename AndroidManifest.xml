@@ -13,7 +13,8 @@
         
         <activity
             android:label="@string/app_name"
-            android:name=".GeoStripperActivity" >
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:name=".ui.GeoStripperActivity" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,6 +36,8 @@
                 
             
         </activity>
+        <activity android:name=".ui.WelcomeActivity"
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
         
     </application>
 

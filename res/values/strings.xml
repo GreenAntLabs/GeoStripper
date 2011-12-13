@@ -5,4 +5,19 @@
     <string name="app_name">GeoStripper</string>
 	<string name="pickGalleryButton">Pick Default Gallery</string>
 	<string name="launchActivity">Select Image</string>
+	<string name="continueButton">Continue</string>
+	<string name="welcomeText">
+	    <![CDATA[
+	    <p>Since this is the first time you are using <b>GeoStripper</b>, I thought I should share what Geostripper does.
+	    You will only see this annoying info once. I promise...</p>
+	    <p><b>GeoStripper</b> is a man-in-the-middle tool that safeguards your geo-location privacy when you share your photos online. 
+	    Next time you decide to share your picture via sms, email, your favorite social network or your favorite photo sharing tool, select 
+	    <b>GeoStripper</b> instead of your favorite Gallery.
+	    </p> 
+	    <p><b>GeoStripper</b> intelligently determines a default gallery application and you will be able to change that default at the next screen. Once the default gallery is selected,
+	    </p>
+	   
+	    
+	    ]]>
+	</string>
 </resources>

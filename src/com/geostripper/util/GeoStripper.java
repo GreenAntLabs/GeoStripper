@@ -1,4 +1,4 @@
-package com.geostripper;
+package com.geostripper.util;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
