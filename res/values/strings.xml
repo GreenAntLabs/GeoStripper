@@ -6,18 +6,35 @@
 	<string name="pickGalleryButton">Pick Default Gallery</string>
 	<string name="launchActivity">Select Image</string>
 	<string name="continueButton">Continue</string>
-	<string name="welcomeText">
+	<string name="welcomeText1">
 	    <![CDATA[
-	    <p>Since this is the first time you are using <b>GeoStripper</b>, I thought I should share what Geostripper does.
-	    You will only see this annoying info once. I promise...</p>
-	    <p><b>GeoStripper</b> is a man-in-the-middle tool that safeguards your geo-location privacy when you share your photos online. 
-	    Next time you decide to share your picture via sms, email, your favorite social network or your favorite photo sharing tool, select 
-	    <b>GeoStripper</b> instead of your favorite Gallery.
-	    </p> 
-	    <p><b>GeoStripper</b> intelligently determines a default gallery application and you will be able to change that default at the next screen. Once the default gallery is selected,
-	    </p>
+	    <p><b>GeoStripper</b> is a tool that safeguards your geo-location privacy when sharing your photos online.</p>
+	    <p>When you decide to share your photo via sms, email, a social network or a photosharing app, please select <b>GeoStripper</b> instead of your usual Gallery app.</p>
+	    
+	    <p><b>GeoStripper</b> will automagically determine a default gallery application and allow you to change that to a Gallery app of your choice.</p>
 	   
 	    
 	    ]]>
 	</string>
+	
+	<string name="welcomeText2">
+	    <![CDATA[
+	    <p>Next time you use <b>GeoStripper</b>, it will seamlessly redirect you to the previously specified Gallery app. </p><p>Once you select a photo in that app, Geostripper will remove GPS location
+	    info from the photo on the fly without modifying the original file and then return that GPS-free photo back to the application which requested it. 
+	    </p>
+	    <p>Protect your Geo-privacy : use <b>GeoStripper</b>!</p>
+	    
+	    ]]>
+	</string>
+	<string name="welcomeTextMain">
+	    <![CDATA[
+	    <p>
+	    <b>GeoStripper</b> will use the gallery application specified below when you launch <b>GeoStripper</b> from your favorite sms, email, social networking, 
+	    photo sharing or any application that allows you to select an image from your smartphones gallery next time.
+	    </p>
+	    
+	    ]]>
+	</string>
+	    	    	
+	    
 </resources>

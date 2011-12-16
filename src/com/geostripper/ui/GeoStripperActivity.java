@@ -23,6 +23,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -49,43 +50,61 @@ public class GeoStripperActivity extends Activity {
 	public static final String GALLERY_ICON_FILENAME = "selected_gallery_icon.png";
 
 	static final int SELECT_IMAGE_REQUEST = 66;
+	static final int SHOW_INTRO_REQUEST = 99;
 	TextView chooserText;
 	ImageView galleryIcon;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.d(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
-		
-		Intent i = new Intent(getApplicationContext(), WelcomeActivity.class);
-		startActivityForResult(i,100);
-		//Store application context in a static variable
-		GeoStripper.APP_CONTEXT = getApplicationContext();
-
 		Log.d(TAG, "Arrived with intent: " + getIntent().toString());
 
+		//Store application context in a static variable
+		GeoStripper.APP_CONTEXT = getApplicationContext();				
+		
+		String galleryName = getSharedPreferences(PREFS_NAME, 0).getString(GALLERY_NAME_KEY, null);
+		// If gallery name/intent has not been stored in the settings,
+		// this means we are running this for the first time
+		// then show the intro activity first
+		//if(galleryName == null)
+		if(true)
+		{
+			Intent i = new Intent(getApplicationContext(), IntroActivity.class);
+			startActivityForResult(i,SHOW_INTRO_REQUEST);
+		}
+		else
+		{
+			buildMainView();
+		}
+		
+		
+
+
+
+
+	}
+ 
+	
+	private void buildMainView()
+	{
 		setContentView(R.layout.main);
+		
+		String styledText = getResources().getString(R.string.welcomeTextMain);
+		((TextView)findViewById(R.id.mainWelcomeText)).setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
+		
 		chooserText = (TextView) findViewById(R.id.galleryName);
 		galleryIcon = (ImageView) findViewById(R.id.galleryIcon);
 		
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		String galleryName = settings.getString(GALLERY_NAME_KEY, null);
-		// If gallery name/intent has not been stored in the settings, default to first intent match
-		if(galleryName == null)
+		String galleryName = getSharedPreferences(PREFS_NAME, 0).getString(GALLERY_NAME_KEY, null);
+		
+		//display pre-set gallery name
+		chooserText.setText(galleryName);
+		//try to load pre-set icon for gallery app
+		Bitmap iconImage = loadIcon();
+		if(iconImage!=null)
 		{
-			setGalleryIntent(getResolveInfosForIntent(getIntent())[0]);
-		}
-		else //if gallery name was stored in the settings
-		{
-			//display pre-set gallery name
-			chooserText.setText(galleryName);
-			//try to load pre-set icon for gallery app
-			Bitmap iconImage = loadIcon();
-			if(iconImage!=null)
-			{
-				galleryIcon.setImageBitmap(iconImage);
-			}
+			galleryIcon.setImageBitmap(iconImage);
 		}
 		
 		//galleryPref is a layout that contains the icon,name and the arrow
@@ -129,10 +148,8 @@ public class GeoStripperActivity extends Activity {
 								SELECT_IMAGE_REQUEST);
 					}
 				});
-		;
-
+		
 	}
- 
 	private AlertDialog buildDialog(ResolveInfo[] infos) {
 
 		final ListAdapter adapter = new ArrayAdapter<ResolveInfo>(
@@ -170,6 +187,7 @@ public class GeoStripperActivity extends Activity {
 		return builder.create();
 
 	}
+	
    private Intent getStoredIntent()
     {
 	   Intent newIntent = null;
@@ -267,9 +285,11 @@ public class GeoStripperActivity extends Activity {
 		Drawable icon = info.loadIcon(getPackageManager());
 
 		Log.d(TAG, "Selected: " + title);
-		
-		chooserText.setText(title);
-		galleryIcon.setImageDrawable(icon);
+		//these components may be null if we havent build the main view yet
+		if(chooserText!=null)
+			chooserText.setText(title);
+		if(galleryIcon!=null)
+			galleryIcon.setImageDrawable(icon);
 		
 		saveIcon(icon);
 		//create a copy of intent
@@ -331,12 +351,21 @@ public class GeoStripperActivity extends Activity {
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
+		// if we just selected an image
 		if (SELECT_IMAGE_REQUEST == requestCode
 				&& Activity.RESULT_OK == resultCode) {
-
+			// geostrip it, store it, and finish
 			setResult(Activity.RESULT_OK, geoStripIntentData(data));
 			finish();			
+		}
+		//if we went through intro
+		else if( SHOW_INTRO_REQUEST == requestCode 
+				&& Activity.RESULT_OK == resultCode)
+		{
+			//set default gallery intent
+			setGalleryIntent(getResolveInfosForIntent(getIntent())[0]);
+			//display regular screen
+			buildMainView();
 		}
 
 	}
