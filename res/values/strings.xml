@@ -6,7 +6,7 @@
 	<string name="pickGalleryButton">Pick Default Gallery</string>
 	<string name="launchActivity">Select Image</string>
 	<string name="continueButton">Continue</string>
-	<string name="welcomeText1">
+	<string name="introText1">
 	    <![CDATA[
 	    <p><b>GeoStripper</b> is a tool that safeguards your geo-location privacy when sharing your photos online.</p>
 	    <p>When you decide to share your photo via sms, email, a social network or a photosharing app, please select <b>GeoStripper</b> instead of your usual Gallery app.</p>
@@ -17,7 +17,7 @@
 	    ]]>
 	</string>
 	
-	<string name="welcomeText2">
+	<string name="introText2">
 	    <![CDATA[
 	    <p>Next time you use <b>GeoStripper</b>, it will seamlessly redirect you to the previously specified Gallery app. </p><p>Once you select a photo in that app, Geostripper will remove GPS location
 	    info from the photo on the fly without modifying the original file and then return that GPS-free photo back to the application which requested it. 
@@ -26,12 +26,10 @@
 	    
 	    ]]>
 	</string>
-	<string name="welcomeTextMain">
+	<string name="gsText">
 	    <![CDATA[
-	    <p>
-	    <b>GeoStripper</b> will use the gallery application specified below when you launch <b>GeoStripper</b> from your favorite sms, email, social networking, 
-	    photo sharing or any application that allows you to select an image from your smartphones gallery next time.
-	    </p>
+	    <p>Next time you launch <b>GeoStripper</b> from your favorite photo sharing application, it will redirect you to the Gallery app specified below.</p>
+	    <p>Once you select the photo you want to share, <b>GeoStripper</b> will remove GPS tags from it on the fly without modifying the original picture</p> 
 	    
 	    ]]>
 	</string>

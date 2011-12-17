@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Set;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -54,7 +55,6 @@ public class GeoStripperActivity extends Activity {
 	TextView chooserText;
 	ImageView galleryIcon;
 
-	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,30 +67,45 @@ public class GeoStripperActivity extends Activity {
 		// If gallery name/intent has not been stored in the settings,
 		// this means we are running this for the first time
 		// then show the intro activity first
-		//if(galleryName == null)
-		if(true)
+		if(galleryName == null)
+		//if(true)
 		{
 			Intent i = new Intent(getApplicationContext(), IntroActivity.class);
 			startActivityForResult(i,SHOW_INTRO_REQUEST);
 		}
 		else
 		{
-			buildMainView();
+			String action = getIntent().getAction();
+			Set<String> categories = getIntent().getCategories();
+			// if we are launching as a standalone app
+			if (Intent.ACTION_MAIN.equals(action) 
+					&& categories != null 
+					&& categories.contains(Intent.CATEGORY_LAUNCHER)
+					) 
+			{
+				// then go into a configuration mode
+				buildMainView(false);
+				
+			}
+			else //otherwise
+			{
+				//pass through to image selection activity
+				startActivityForResult(getStoredIntent(), SELECT_IMAGE_REQUEST);
+			}
 		}
 		
-		
-
-
-
 
 	}
  
-	
-	private void buildMainView()
+	/**
+	 * Builds main GeoStripper view and shows the continue button depending on the argment
+	 * @param showContinueButton
+	 */
+	private void buildMainView(boolean showContinueButton)
 	{
 		setContentView(R.layout.main);
 		
-		String styledText = getResources().getString(R.string.welcomeTextMain);
+		String styledText = getResources().getString(R.string.gsText);
 		((TextView)findViewById(R.id.mainWelcomeText)).setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
 		
 		chooserText = (TextView) findViewById(R.id.galleryName);
@@ -138,18 +153,32 @@ public class GeoStripperActivity extends Activity {
             	//return false, since we want this event to propagate further
                 return false;
             }
-       });
+        });
+		
+		Button continueButton = ((Button) findViewById(R.id.mainContinueButton));
+		if(showContinueButton)
+		{
+			continueButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					startActivityForResult(getStoredIntent(),
+							SELECT_IMAGE_REQUEST);
+				}
+			});
 
-		((Button) findViewById(R.id.launcherButton))
-				.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						startActivityForResult(getStoredIntent(),
-								SELECT_IMAGE_REQUEST);
-					}
-				});
+		}
+		else
+		{
+			((ViewGroup)findViewById(R.id.mainLayout)).removeView(continueButton);
+		}
 		
 	}
+	
+	/**
+	 * Build an alert dialog that lists the provided applications(ResolveInfos)
+	 * @param infos
+	 * @return
+	 */
 	private AlertDialog buildDialog(ResolveInfo[] infos) {
 
 		final ListAdapter adapter = new ArrayAdapter<ResolveInfo>(
@@ -176,6 +205,7 @@ public class GeoStripperActivity extends Activity {
 
 		DialogInterface.OnClickListener clickListener = new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, final int item) {
+				//build an intent based on the selected gallery app.
 				setGalleryIntent((ResolveInfo) adapter.getItem(item));
 
 			}
@@ -188,6 +218,11 @@ public class GeoStripperActivity extends Activity {
 
 	}
 	
+	
+	/**
+	 * Retrieves/builds the intent based on the intent URI stored in shared preferences
+	 * @return
+	 */
    private Intent getStoredIntent()
     {
 	   Intent newIntent = null;
@@ -202,6 +237,7 @@ public class GeoStripperActivity extends Activity {
 		}
 	    return newIntent;
     }
+   
    /**
     * Loads gallery app icon from previously saved file
     * 
@@ -276,6 +312,7 @@ public class GeoStripperActivity extends Activity {
  
     	
     }
+    
     /**
      * Displays selected gallery intent and saves it into shared preferences
      * @param info
@@ -347,25 +384,24 @@ public class GeoStripperActivity extends Activity {
 
 	}
 
-	
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		// if we just selected an image
 		if (SELECT_IMAGE_REQUEST == requestCode
 				&& Activity.RESULT_OK == resultCode) {
-			// geostrip it, store it, and finish
+			// geostrip it, store it, and finish(returning the stored result to the app that launched this activity
 			setResult(Activity.RESULT_OK, geoStripIntentData(data));
 			finish();			
 		}
-		//if we went through intro
+		//if we went through intro activity
 		else if( SHOW_INTRO_REQUEST == requestCode 
 				&& Activity.RESULT_OK == resultCode)
 		{
 			//set default gallery intent
 			setGalleryIntent(getResolveInfosForIntent(getIntent())[0]);
 			//display regular screen
-			buildMainView();
+			buildMainView(true);
 		}
 
 	}

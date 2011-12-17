@@ -3,7 +3,6 @@ package com.geostripper.ui;
 import com.geostripper.R;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -15,16 +14,15 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher.ViewFactory;
 
 public class IntroActivity extends Activity {
-	TextSwitcher introText;
-	int[] textIds = {R.string.welcomeText1, R.string.welcomeText2};
-	int textIndex = 0;
+	private TextSwitcher introText;
+	private final int[] textIds = {R.string.introText1, R.string.introText2};
+	private int textIndex = 0;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.intro);
-		introText = (TextSwitcher)findViewById(R.id.introTextView);
-		
-				
+		//build textswitcher
+		introText = (TextSwitcher)findViewById(R.id.introTextView);		
 		introText.setFactory(new ViewFactory() {
 
 			@Override
@@ -35,25 +33,30 @@ public class IntroActivity extends Activity {
 			}
 		});
 
-				
+		//set first text message		
 		setMessage(textIds[textIndex++]);
+		//specify the animation after the first message, so that
+		//later messages would slide in
 		introText.setInAnimation(AnimationUtils.loadAnimation(this,
 				R.anim.right_slide_in));
 		introText.setOutAnimation(AnimationUtils.loadAnimation(this,
 				R.anim.left_slide_out));
 				
-		Button continueButton = (Button) findViewById(R.id.continueButton);
+		Button continueButton = (Button) findViewById(R.id.introContinueButton);
 		continueButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				//show as many intro messages as we have
 				if(textIndex < textIds.length)
 				{
 					setMessage(textIds[textIndex++]);
 				}
-				else
+				else //and then end activity and return back to main activity
 				{
 					setResult(RESULT_OK);
 					finish();
+					
+					//change finish animation to mimic natural flow of things
 					overridePendingTransition  (R.anim.right_slide_in, R.anim.left_slide_out);
 				}
 			}
@@ -61,10 +64,15 @@ public class IntroActivity extends Activity {
 		
 	}
 	
+	/**
+	 *	Display styled text of the message referenced by the provided resource id 
+	 * @param messageResourceId resource id of the text message
+	 */
 	private void setMessage(int messageResourceId)
 	{
 		String styledText = getResources().getString(messageResourceId);
 		final TextView t = (TextView) introText.getNextView();
+		//set styled text in the TextView contained inside TextSwitcher
 		t.setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
 		introText.showNext();
 		
