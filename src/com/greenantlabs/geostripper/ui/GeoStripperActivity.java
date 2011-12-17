@@ -1,4 +1,4 @@
-package com.geostripper.ui;
+package com.greenantlabs.geostripper.ui;
 
 
 import java.io.File;
@@ -38,8 +38,8 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.geostripper.R;
-import com.geostripper.util.GeoStripper;
+import com.greenantlabs.geostripper.R;
+import com.greenantlabs.geostripper.util.GeoStripper;
 
 
 public class GeoStripperActivity extends Activity {

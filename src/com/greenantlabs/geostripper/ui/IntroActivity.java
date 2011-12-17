@@ -1,6 +1,6 @@
-package com.geostripper.ui;
+package com.greenantlabs.geostripper.ui;
 
-import com.geostripper.R;
+import com.greenantlabs.geostripper.R;
 
 import android.app.Activity;
 import android.os.Bundle;

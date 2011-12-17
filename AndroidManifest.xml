@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.geostripper"
+    package="com.greenantlabs.geostripper"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -17,7 +17,7 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar"
             android:configChanges="keyboardHidden|orientation"
-            android:name=".ui.GeoStripperActivity" >
+            android:name="com.greenantlabs.geostripper.ui.GeoStripperActivity" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,7 +39,7 @@
                 
             
         </activity>
-        <activity android:name=".ui.IntroActivity"
+        <activity android:name="com.greenantlabs.geostripper.ui.IntroActivity"
             android:configChanges="keyboardHidden|orientation"
             android:theme="@android:style/Theme.NoTitleBar"></activity>
         
