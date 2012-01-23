@@ -67,8 +67,8 @@ public class GeoStripperActivity extends Activity {
 		// If gallery name/intent has not been stored in the settings,
 		// this means we are running this for the first time
 		// then show the intro activity first
-		if(galleryName == null)
-		//if(true)
+		//if(galleryName == null)
+		if(true)
 		{
 			Intent i = new Intent(getApplicationContext(), IntroActivity.class);
 			startActivityForResult(i,SHOW_INTRO_REQUEST);

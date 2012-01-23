@@ -6,7 +6,7 @@
 	<string name="pickGalleryButton">Pick Default Gallery</string>
 	<string name="launchActivity">Select Image</string>
 	<string name="continueButton">Continue</string>
-	<string name = "introSpivak">
+	<string name = "introText">
 	    <![CDATA[
 	    <p><b>GeoStripper</b> protects your privacy when sharing photos by hiding the location the photo was taken. It works with email, SMS, and all social networks.</p>
 		<p>Just select <b>Geostripper</b> when sharing photos, and we will take over from there.</p>

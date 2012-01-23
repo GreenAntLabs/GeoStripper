@@ -15,7 +15,8 @@ import android.widget.ViewSwitcher.ViewFactory;
 
 public class IntroActivity extends Activity {
 	private TextSwitcher introText;
-	private final int[] textIds = {R.string.introSpivak};
+	// array of resource ids that feed into the TextSwitcher
+	private final int[] textIds = {R.string.introText};
 	private int textIndex = 0;
 	
 	public void onCreate(Bundle savedInstanceState) {
