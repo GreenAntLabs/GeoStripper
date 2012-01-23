@@ -15,7 +15,7 @@ import android.widget.ViewSwitcher.ViewFactory;
 
 public class IntroActivity extends Activity {
 	private TextSwitcher introText;
-	private final int[] textIds = {R.string.introText1, R.string.introText2};
+	private final int[] textIds = {R.string.introSpivak};
 	private int textIndex = 0;
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,7 @@ public class IntroActivity extends Activity {
 	private void setMessage(int messageResourceId)
 	{
 		String styledText = getResources().getString(messageResourceId);
-		final TextView t = (TextView) introText.getNextView();
+		TextView t = (TextView) introText.getNextView();
 		//set styled text in the TextView contained inside TextSwitcher
 		t.setText(Html.fromHtml(styledText), TextView.BufferType.SPANNABLE);
 		introText.showNext();
