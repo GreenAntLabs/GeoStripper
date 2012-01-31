@@ -23,6 +23,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
@@ -44,7 +45,6 @@ import com.greenantlabs.geostripper.util.GeoStripper;
 
 public class GeoStripperActivity extends Activity {
 	public static final String TAG = "GeoStripperActivity";
-	public static final String PREFS_NAME = "GeoStripperPreferences";
 	public static final String GALLERY_INTENT_URI_KEY = "Gallery Intent";
 	public static final String GALLERY_NAME_KEY = "Gallery Name";
 	public static final String GALLERY_ICON_KEY = "Gallery Icon";
@@ -63,28 +63,23 @@ public class GeoStripperActivity extends Activity {
 		//Store application context in a static variable
 		GeoStripper.APP_CONTEXT = getApplicationContext();				
 		
-		String galleryName = getSharedPreferences(PREFS_NAME, 0).getString(GALLERY_NAME_KEY, null);
+		String galleryName = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(GALLERY_NAME_KEY, null);
 		// If gallery name/intent has not been stored in the settings,
 		// this means we are running this for the first time
-		// then show the intro activity first
-		//if(galleryName == null)
-		if(true)
+		// then show the intro activity first	
+		if(galleryName == null)
+	
 		{
 			Intent i = new Intent(getApplicationContext(), IntroActivity.class);
 			startActivityForResult(i,SHOW_INTRO_REQUEST);
 		}
 		else
 		{
-			String action = getIntent().getAction();
-			Set<String> categories = getIntent().getCategories();
-			// if we are launching as a standalone app
-			if (Intent.ACTION_MAIN.equals(action) 
-					&& categories != null 
-					&& categories.contains(Intent.CATEGORY_LAUNCHER)
-					) 
+			
+			if(wasLaunchedAsStandalone())
 			{
 				// then go into a configuration mode
-				buildMainView(false);
+				buildMainView();
 				
 			}
 			else //otherwise
@@ -98,10 +93,9 @@ public class GeoStripperActivity extends Activity {
 	}
  
 	/**
-	 * Builds main GeoStripper view and shows the continue button depending on the argment
-	 * @param showContinueButton
+	 * Builds main GeoStripper view
 	 */
-	private void buildMainView(boolean showContinueButton)
+	private void buildMainView()
 	{
 		setContentView(R.layout.main);
 		
@@ -111,7 +105,7 @@ public class GeoStripperActivity extends Activity {
 		chooserText = (TextView) findViewById(R.id.galleryName);
 		galleryIcon = (ImageView) findViewById(R.id.galleryIcon);
 		
-		String galleryName = getSharedPreferences(PREFS_NAME, 0).getString(GALLERY_NAME_KEY, null);
+		String galleryName = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(GALLERY_NAME_KEY, null);
 		
 		//display pre-set gallery name
 		chooserText.setText(galleryName);
@@ -156,7 +150,11 @@ public class GeoStripperActivity extends Activity {
         });
 		
 		Button continueButton = ((Button) findViewById(R.id.mainContinueButton));
-		if(showContinueButton)
+		if(wasLaunchedAsStandalone())
+		{
+			((ViewGroup)findViewById(R.id.mainLayout)).removeView(continueButton);
+		}
+		else
 		{
 			continueButton.setOnClickListener(new OnClickListener() {
 				@Override
@@ -165,11 +163,6 @@ public class GeoStripperActivity extends Activity {
 							SELECT_IMAGE_REQUEST);
 				}
 			});
-
-		}
-		else
-		{
-			((ViewGroup)findViewById(R.id.mainLayout)).removeView(continueButton);
 		}
 		
 	}
@@ -226,16 +219,17 @@ public class GeoStripperActivity extends Activity {
    private Intent getStoredIntent()
     {
 	   Intent newIntent = null;
-	   SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-	
-	    String uri = settings.getString(GALLERY_INTENT_URI_KEY, "#Intent;action=android.intent.action.PICK;type=vnd.android.cursor.dir/image;component=com.cooliris.media/.Gallery;end");
-	    try {
+		
+	   SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplication());
+	   
+	   String uri = settings.getString(GALLERY_INTENT_URI_KEY, "#Intent;action=android.intent.action.PICK;type=vnd.android.cursor.dir/image;component=com.cooliris.media/.Gallery;end");
+	   try {
 			newIntent =  Intent.getIntent(uri);
-		} catch (URISyntaxException e) {
+	   } catch (URISyntaxException e) {
 			
 			e.printStackTrace();
-		}
-	    return newIntent;
+	   }
+	   return newIntent;
     }
    
    /**
@@ -334,8 +328,7 @@ public class GeoStripperActivity extends Activity {
 		//specify package attributes for later URI generation
 		selectedIntent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
 		
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		SharedPreferences.Editor editor = settings.edit();
+		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
 		//store intent uri in shared preferences
 		editor.putString(GALLERY_INTENT_URI_KEY, selectedIntent.toURI());
 		//store displayable gallery app name in shared preferences
@@ -343,6 +336,19 @@ public class GeoStripperActivity extends Activity {
 		editor.commit();
 	}
 	
+	
+	/**
+	 * Returns true if launching as a standalone app, flase otherwise
+	 * @return
+	 */
+	private boolean wasLaunchedAsStandalone(){
+		String action = getIntent().getAction();
+		Set<String> categories = getIntent().getCategories();
+		return (Intent.ACTION_MAIN.equals(action) 
+				&& categories != null 
+				&& categories.contains(Intent.CATEGORY_LAUNCHER)
+				); 
+	}
 	/**
 	 * Creates a copy of provided intent and fixes the action/type if neccessary
 	 * @param intent
@@ -384,7 +390,6 @@ public class GeoStripperActivity extends Activity {
 
 	}
 
-
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		// if we just selected an image
@@ -401,7 +406,7 @@ public class GeoStripperActivity extends Activity {
 			//set default gallery intent
 			setGalleryIntent(getResolveInfosForIntent(getIntent())[0]);
 			//display regular screen
-			buildMainView(true);
+			buildMainView();
 		}
 
 	}
