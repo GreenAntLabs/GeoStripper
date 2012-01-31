@@ -18,8 +18,11 @@ gen/
 local.properties
 
 .DS_Store
-.idea
-.settings
+.idea/
+.settings/
+.rsa/
+proguard.cfg
+tests/proguard.cfg
 Geostripper.iml
 lint.xml
 out/
