@@ -19,7 +19,8 @@ local.properties
 
 .DS_Store
 .idea
-.settings
+.settings/
+.rsa/
 Geostripper.iml
 lint.xml
 out/
